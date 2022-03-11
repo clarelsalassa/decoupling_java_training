@@ -3,6 +3,10 @@ package fr.lernejo.guessgame;
 import fr.lernejo.logger.Logger;
 import fr.lernejo.logger.LoggerFactory;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Simulation {
@@ -35,10 +39,22 @@ public class Simulation {
         return true;
     }
 
-    public void loopUntilPlayerSucceed() {
+    public void loopUntilPlayerSucceed(long limit) {
         boolean isFinished = false;
-        while (!isFinished){
+        long n = 0;
+        long startTime = System.currentTimeMillis();
+        while (!isFinished && n < limit){
             isFinished = nextRound();
+            n++;
         }
+        long durringTime = System.currentTimeMillis() - startTime;
+        Date time = new Date(durringTime);
+        DateFormat df = new SimpleDateFormat("mm:ss.SSS");
+        logger.log("During time: " + df.format(time));
+        if (isFinished)
+            logger.log("Player has found the number in " + n + " iterations");
+        else
+            logger.log("Player has not found the number within " + limit +
+                " iterations");
     }
 }
